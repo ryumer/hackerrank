@@ -1,3 +1,39 @@
+/*
+Given a string S, find the number of unordered anagramic pairs of substrings.
+
+Input Format
+
+First line contains T, the number of testcases. Each testcase consists of string S in one line.
+
+Constraints 
+1≤T≤10 
+2≤length(S)≤100 
+String S contains only the lowercase letters of the English alphabet.
+
+Output Format
+
+For each testcase, print the required answer in one line.
+
+Sample Input
+
+2
+abba
+abcd
+Sample Output
+
+4
+0
+Explanation
+
+Let's say S[i,j] denotes the substring Si,Si+1,⋯,Sj.
+
+testcase 1: 
+For S=abba, anagramic pairs are: {S[1,1],S[4,4]}, {S[1,2],S[3,4]}, {S[2,2],S[3,3]} and {S[1,3],S[2,4]}.
+
+testcase 2: 
+No anagramic pairs.
+*/
+
 import java.io.*;
 import java.util.*;
 import java.text.*;
@@ -18,18 +54,21 @@ public class Solution {
             
             int sum = 0;
             
-            for (int j = 0; j < len; j++) { //j0
-                int maxLen = len - j;
-                for (int l = 1; l < maxLen; l++) {
+            for (int size = 1; size < s.length(); size++) {
+                
+                for (int start = 0; start < s.length() - size + 1; start++) {
                     
-                    for (int k = j+1; j + k + 1 < len; k++) {
-                        String s1 = s.substring(j, len - l - j);
-                        String s2 = s.substring(k, len - l - k);
+                    String s1 = s.substring(start, start + size);
+                    
+                    for (int cmp = start + 1; cmp < s.length() - size + 1; cmp++) {
+                        String s2 = s.substring(cmp, cmp + size);
                         if (isAnagram(s1, s2)) {
                             sum++;
+                        
                         }
                     }
                 }
+                
             }
             
             System.out.println(sum);
@@ -37,28 +76,15 @@ public class Solution {
     }
     
     public static boolean isAnagram(String s1, String s2) {
-        int[] s1Histogram = new int[256];
-        int[] s2Histogram = new int[256];
-
-        Arrays.fill(s1Histogram, 0);
-        Arrays.fill(s2Histogram, 0);
-
-        int len = s1.length();
-
         
-
-        for (int i = 0; i < len; i++) {
-            char c1 = s1.charAt(i);
-            char c2 = s2.charAt(i);
-            s1Histogram[c1] = s1Histogram[c1] + 1;
-            s2Histogram[c2] = s2Histogram[c2] + 1;
-        }
-
-        for (int i = 0; i < s1Histogram.length; i++) {
-            if (s1Histogram[i] != s2Histogram[i]) {
-                return false;
-            }
-        }
-        return true;
+        char[] s1array = s1.toCharArray();
+        char[] s2array = s2.toCharArray();
+        Arrays.sort(s1array);
+        Arrays.sort(s2array);
+        
+        s1 = new String(s1array);
+        s2 = new String(s2array);
+        
+        return s1.equals(s2);
     }
 }
